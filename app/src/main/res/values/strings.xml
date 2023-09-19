@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">GPT App</string>
+    <string name="gptapp_txt_welcome">Hola, ¿En que puedo ayudarte?</string>
+    <string name="gptapp_txt_btnvoice">Pres to talk</string>
+    <string name="gptapp_btnvoice_descripcion">Voice ImageButton</string>
+    <string name="gptapp_iv_description">Chat Gpt Image</string>
 </resources>
