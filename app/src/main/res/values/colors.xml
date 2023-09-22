@@ -7,4 +7,5 @@
     <color name="app_primary_color">#008FF6</color>
     <color name="app_secondary_color">#6EA6D0</color>
     <color name="app_tertiary_color">#87B5D8</color>
+    <color name="app_currently_spoken_text_color">#9A6BFE</color>
 </resources>
