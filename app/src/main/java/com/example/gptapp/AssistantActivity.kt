@@ -104,7 +104,7 @@ class AssistantActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 runOnUiThread { binding.tvWelcome.text = "" }
             }
         }
-        textToSpeech.setOnUtteranceProgressListener(listener)
-        textToSpeech.speak(response, TextToSpeech.QUEUE_FLUSH, null, "")
+        textToSpeech.setOnUtteranceProgressListener(listener)   // Establece el oyente que será notificado de los eventos relacionados con la síntesis (lectura/reproducción) de un enunciado determinado.
+        textToSpeech.speak(response, TextToSpeech.QUEUE_FLUSH, null, "")    // Habla (reproduce) el texto indicado (en este caso en la variable response), utilizando la estrategia de cola y los parámetros de voz especificados
     }
 }
