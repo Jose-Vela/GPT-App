@@ -6,6 +6,8 @@ This is a Kotlin-based Android app that uses the OpenAI API (ChatGPT), to ask qu
 
 ## Current Difficulties
 
-working on Cloud Functions integration to protect the OpenAI API key and not include it in the application source code
+- Working on Cloud Functions integration to protect the OpenAI API key and not include it in the application source code.
 
-The free trial offered by OpenAI for the use of its API has expired
+- The free trial offered by OpenAI for the use of its API has expired.
+
+- For the moment we will work replacing YOUR_API_KEY with the actual API key.
