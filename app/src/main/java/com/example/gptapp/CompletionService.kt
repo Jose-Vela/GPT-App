@@ -7,5 +7,8 @@ import retrofit2.http.POST
 interface CompletionService {
 
     @POST("chat/completions")
-    suspend fun getCompletion(@Body completionData: CompletionData, @Header("Authorization") barrer:String) : CompletionResponse
+    suspend fun getCompletion(
+        @Body completionData: CompletionData,
+        @Header("Authorization") barrer: String
+    ): CompletionResponse
 }
