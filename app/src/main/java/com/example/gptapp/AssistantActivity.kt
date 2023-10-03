@@ -4,22 +4,26 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.gptapp.databinding.AssistantActivityBinding
+import com.example.gptapp.viewModel.CompletionViewModel
 import java.util.Locale
 
 class AssistantActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private lateinit var binding: AssistantActivityBinding
     private lateinit var textToSpeech: TextToSpeech
+    private lateinit var completionViewModel: CompletionViewModel
 
     private val startActivityForResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -27,7 +31,8 @@ class AssistantActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if (it.resultCode == Activity.RESULT_OK) {
             val result = it.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
             val text = result?.get(0)
-            //mCompletionViewModel.postCompletionLiveData(text.toString())
+            completionViewModel.postCompletionLiveData(text.toString())
+            binding.viewResponse.visibility = View.INVISIBLE
             binding.pbWaiting.visibility = View.VISIBLE
         }
     }
@@ -39,6 +44,20 @@ class AssistantActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         binding.btnVoice.setOnClickListener {
             displaySpeechRecognizer()
+        }
+
+        textToSpeech = TextToSpeech(this, this)
+        setupViewModel()
+
+    }
+
+    private fun setupViewModel() {
+        completionViewModel = ViewModelProvider(this)[CompletionViewModel::class.java]
+        completionViewModel.observeCompletionLiveData().observe(this) {
+            binding.pbWaiting.visibility = View.GONE
+            binding.ltRobot.playAnimation()
+            binding.viewResponse.visibility = View.VISIBLE
+            speakOut(it.choices[0].message.content)
         }
     }
 
@@ -78,26 +97,35 @@ class AssistantActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         try {
             startActivityForResult.launch(intent)
         } catch (e: ActivityNotFoundException) {
-            Toast.makeText(applicationContext, "Su dispositivo no admite entrada por voz", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                applicationContext,
+                "Su dispositivo no admite entrada por voz",
+                Toast.LENGTH_LONG
+            ).show()
         }
 
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     private fun speakOut(response: String) {
         // El listener tendrá la funcionalidad de ir "escuchando" la palabra que TextToSpeech vaya leyendo (reproducionedo) y esta se pintará de otro color
         val listener = object : UtteranceProgressListener() {
             override fun onRangeStart(utteranceId: String?, start: Int, end: Int, frame: Int) {
                 val spannableString = SpannableString(response)
+
                 spannableString.setSpan(
-                    Color.parseColor(R.color.app_currently_spoken_text_color.toString()),   // La palabra "hablada" se pintará de este otro color
-                    start, end, 0)
+                    ForegroundColorSpan(
+                        Color.parseColor("#" + getColor(R.color.app_currently_spoken_text_color)
+                            .toHexString(HexFormat.UpperCase).substring(2)),    // La palabra "hablada" se pintará de este otro color
+                    ), start, end, 0)
+
                 runOnUiThread { binding.tvResponse.text = spannableString }
             }
 
             override fun onStart(utteranceId: String?) {}
 
             override fun onDone(utteranceId: String?) {
-                runOnUiThread { binding.ltRobot.pauseAnimation() }
+                runOnUiThread { binding.ltRobot.cancelAnimation() }
             }
 
             override fun onError(utteranceId: String?) {
@@ -105,6 +133,6 @@ class AssistantActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
         textToSpeech.setOnUtteranceProgressListener(listener)   // Establece el oyente que será notificado de los eventos relacionados con la síntesis (lectura/reproducción) de un enunciado determinado.
-        textToSpeech.speak(response, TextToSpeech.QUEUE_FLUSH, null, "")    // Habla (reproduce) el texto indicado (en este caso en la variable response), utilizando la estrategia de cola y los parámetros de voz especificados
+        textToSpeech.speak(response, TextToSpeech.QUEUE_FLUSH,null,"id")    // Habla (reproduce) el texto indicado (en este caso en la variable response), utilizando la estrategia de cola y los parámetros de voz especificados
     }
 }
