@@ -24,6 +24,7 @@ class CompletionInterceptor {
                     "gpt-3.5-turbo",
                     0.7
                 )
+
                 val response = service.getCompletion(data,"Bearer YOUR_API_KEY")
                 callback(response)
             } catch (e: Exception) {
