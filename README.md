@@ -4,10 +4,10 @@
 
 This is a Kotlin-based Android app that uses the OpenAI API (ChatGPT), to ask questions using speech-to-text commands and get answers using text-to-speech synthesis.
 
-## Current Difficulties
+## Instructions to execute
 
-- Working on Cloud Functions integration to protect the OpenAI API key and not include it in the application source code.
-
-- The free trial offered by OpenAI for the use of its API has expired.
-
-- For the moment we will work replacing YOUR_API_KEY with the actual API key.
+- Clone this repository. 
+- Open the project in Android Studio. 
+- Get your OpenAI API key: https://platform.openai.com/account/api-keys
+- Replace YOUR_API_KEY in the CompletionInterceptor.kt file with your actual API key. 
+- Build and run the app on a real device.
