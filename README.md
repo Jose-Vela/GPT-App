@@ -21,6 +21,10 @@ This is a Kotlin-based Android app that uses the OpenAI API (ChatGPT), to ask qu
         <img width="24%" src="https://i.postimg.cc/QNcHYj8j/Screenshot-4.png" hspace="1.7" vspace="5">
 </p>
 
+<p align="center">
+    [GPT-App_Test.mp4](..%2F..%2FDesktop%2FImg%20Apps%2FGPT-App%2FGPT-App_Test.mp4)s
+</p>
+
 ## Built With
 
 - Kotlin programming language. 
